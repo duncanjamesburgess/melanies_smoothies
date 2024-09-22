@@ -17,13 +17,10 @@ st.write('The name on your Smoothie will be:', name_on_order)
 cnx = st.connection("snowflake")
 session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'),col('SEARCH_ON'))
-# st.dataframe(data=my_dataframe, use_container_width=True)
-# st.stop()
+
 
 # Convert the Snowflake Dataframe to a Pandas Dataframe so we can use the LOC function
 pd_df = my_dataframe.to_pandas()
-# st.dataframe(pd_df)
-
 
 ingredients_list = st.multiselect(
     'Choose up to 5 ingredients:'
@@ -43,31 +40,15 @@ if ingredients_list:
         
         st.subheader(fruit_chosen + ' Nurition Information (Serving Per 100g)')
         fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + search_on)
-        
-       # a = []
-       # a.append(fruityvice_response.json())
-       # st.write(fruityvice_response.json())
-       # st.write(a)
-       # fv = pd.DataFrame(a, columns = ['nutritions'])
+     
         fvv = pd.DataFrame(fruityvice_response.json(), columns = ['nutritions'])
         
-       # st.write(fv)
-       # st.write(fvv)
-        components.html(fvv.to_html(header=False))
-       # st.write(pd.json_normalize(a["nutritions"]))
-       # fv_nut = pd.json_normalize(fv["labels"])
-       # st.write(fv_nut)
-        
-       # fv_2=fv.drop(columns=['family'])
-       # fv_df_2 = st.dataframe(data=fv_nut, use_container_width=True)
-        
-
-    #st.write(ingredients_string)
-
+               components.html(fvv.to_html(header=False))
+       
     my_insert_stmt = """insert into smoothies.public.orders(ingredients, name_on_order)
             values ('""" + ingredients_string + """', '""" + name_on_order + """')"""
 
-    #st.write(my_insert_stmt)
+
     time_to_insert = st.button('Submit Order')
 
     if time_to_insert:
