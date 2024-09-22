@@ -43,7 +43,7 @@ if ingredients_list:
      
         fvv = pd.DataFrame(fruityvice_response.json(), columns = ['nutritions'])
         
-               components.html(fvv.to_html(header=False))
+        components.html(fvv.to_html(header=False))
        
     my_insert_stmt = """insert into smoothies.public.orders(ingredients, name_on_order)
             values ('""" + ingredients_string + """', '""" + name_on_order + """')"""
