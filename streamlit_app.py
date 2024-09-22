@@ -1,6 +1,6 @@
 # Import python packages
 import streamlit as st
-#from snowflake.snowpark.context import get_active_session
+import requests
 from snowflake.snowpark.functions import col
 
 # Write directly to the app
@@ -10,7 +10,6 @@ st.write(
     """
 )
 
-#import streamlit as st
 cnx = st.connection("snowflake")
 session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select (col('FRUIT_NAME'))
@@ -38,3 +37,7 @@ time_to_insert = st.button('Submit Order')
 if time_to_insert:
     session.sql(my_insert_stmt).collect()
     st.success('Your Smoothie is ordered!', icon="✅")
+
+import requests
+fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
+st.text(fruityvice_response)
